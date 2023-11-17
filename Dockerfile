@@ -11,4 +11,4 @@ COPY . /code/
 RUN pip install --upgrade pip \
  && pip install -r requirements.txt
 
-CMD gunicorn webapp.main:app --workers ${WORKERS} --worker-class uvicorn.workers.UvicornWorker --bind ${HOST}:${PORT}
+CMD gunicorn webapp.main:app --workers ${WORKERS} --worker-class uvicorn.workers.UvicornWorker --bind ${HOST}:${PORT} --log-config log.ini
