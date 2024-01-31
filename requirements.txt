@@ -2,3 +2,4 @@ fastapi
 sqlmodel
 colorlog
 gunicorn
+pydantic-settings-yaml
