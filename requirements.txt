@@ -1,5 +1,5 @@
 fastapi
 sqlmodel
 colorlog
-pydantic-settings-yaml
+pydantic-settings
 uvicorn
