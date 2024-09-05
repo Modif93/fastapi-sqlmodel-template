@@ -2,4 +2,4 @@ fastapi
 sqlmodel
 colorlog
 pydantic-settings
-uvicorn
+argon2-cffi

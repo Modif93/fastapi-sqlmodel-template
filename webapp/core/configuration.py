@@ -21,9 +21,22 @@ class ServerConfig(BaseModel):
     port: int
 
 
+class TokenConfig(BaseModel):
+    algorithm: str
+    secret_key: str
+    refresh_secret_key: str
+    expire_min: int
+    refresh_hours: int
+
+
+class SecurityConfig(BaseModel):
+    tokenize: TokenConfig
+
+
 class EnvConfig(BaseSettings):
     datasource: DataSourceConfig
     server: ServerConfig
+    security: SecurityConfig
 
     model_config = SettingsConfigDict(env_nested_delimiter='__')
 
