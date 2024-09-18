@@ -3,9 +3,10 @@
 from uuid import uuid4
 from typing import Annotated, Sequence
 
-from fastapi import Depends
+from fastapi import Depends, Response, status
+
 from ..repository.user import UserRepository
-from ..model.user import User
+from webapp.model.db.user import User
 
 
 class UserService(object):
@@ -25,5 +26,6 @@ class UserService(object):
         return self._repository.add(
             User(email=f"{uid}@email.com", hashed_password="pwd"))
 
-    def delete_user_by_id(self, user_id: int) -> None:
-        return self._repository.delete_by_id(user_id)
+    def delete_user_by_id(self, user_id: int):
+        self._repository.delete_by_id(user_id)
+        return Response(status_code=status.HTTP_204_NO_CONTENT)

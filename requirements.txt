@@ -3,3 +3,4 @@ sqlmodel
 colorlog
 pydantic-settings
 argon2-cffi
+pyjwt

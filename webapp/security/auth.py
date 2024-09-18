@@ -6,15 +6,14 @@ from typing import Annotated
 from fastapi import Depends
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from argon2 import PasswordHasher
-from pydantic import BaseModel
 
 from ..core.configuration import env_config
 from ..exception.auth import LoginException
-from ..model.auth import UserInDB, UserModel
+from webapp.model.schema.user import UserResponse
 from ..service.user import UserService
 
 loginForm = Annotated[OAuth2PasswordRequestForm, Depends()]
-tokenHeader = Annotated[str, Depends(OAuth2PasswordBearer(tokenUrl="login"))]
+tokenHeader = Annotated[str, Depends(OAuth2PasswordBearer(tokenUrl="auth"))]
 userService = Annotated[UserService, Depends(UserService)]
 
 
@@ -43,7 +42,7 @@ class Authenticate(object):
             raise LoginException("pw")
         return user
 
-    def create_access_token(self, current_dt, user: UserModel):
+    def create_access_token(self, current_dt, user: UserResponse):
         access_token_expires = current_dt + timedelta(minutes=self.tokenize_conf.expire_min)
 
         access_token_data = {
@@ -56,7 +55,7 @@ class Authenticate(object):
         return jwt.encode(
             access_token_data, self.tokenize_conf.secret_key, algorithm=self.tokenize_conf.algorithm)
 
-    def create_refresh_token(self, current_dt, user: UserModel):
+    def create_refresh_token(self, current_dt, user: UserResponse):
         refresh_token_expires = current_dt + timedelta(hours=self.tokenize_conf.refresh_hours)
         refresh_token_data = {
             "sub": user.username,

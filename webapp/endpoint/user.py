@@ -18,10 +18,7 @@ def get_list(user_service: userService):
 
 @router.get("/users/{user_id}")
 def get_by_id(user_id: int, user_service: userService):
-    try:
-        return user_service.get_user_by_id(user_id)
-    except EntityNotFoundError:
-        raise UserNotFoundException(user_id)
+    return user_service.get_user_by_id(user_id)
 
 
 @router.post("/users", status_code=status.HTTP_201_CREATED)
@@ -31,12 +28,8 @@ def add(user_service: userService):
 
 @router.delete("/users/{user_id}", status_code=status.HTTP_204_NO_CONTENT)
 def remove(user_id: int, user_service: userService):
-    try:
-        user_service.delete_user_by_id(user_id)
-    except EntityNotFoundError:
-        return Response(status_code=status.HTTP_404_NOT_FOUND)
-    else:
-        return Response(status_code=status.HTTP_204_NO_CONTENT)
+    return user_service.delete_user_by_id(user_id)
+
 
 
 @router.get("/status")

@@ -6,13 +6,14 @@ from sqlmodel import Session, SQLModel, select
 from .database import get_session
 from ..exception.entity import EntityNotFoundError
 
-get_session = Annotated[Session, Depends(get_session)]
+database_session = Annotated[Session, Depends(get_session)]
+
 
 class Repository(object):
     _model: Type[SQLModel]
     _entity_name: str
 
-    def __init__(self, session: get_session):
+    def __init__(self, session: database_session):
         self._session = session
 
     def get_all(self):
@@ -28,12 +29,14 @@ class Repository(object):
     def add(self, model: Any):
         self._session.add(model)
         self._session.commit()
+        self._session.refresh(model)
         return model
 
     def modify(self, model: Any):
-        self._session.merge(model)
+        merged_model = self._session.merge(model)
         self._session.commit()
-        return model
+        self._session.refresh(merged_model)
+        return merged_model
 
     def delete_by_id(self, _id):
         entity = self._session.get(self._model, _id)
@@ -41,6 +44,3 @@ class Repository(object):
             raise EntityNotFoundError(self._entity_name, _id)
         self._session.delete(entity)
         self._session.commit()
-
-
-

@@ -1,12 +1,7 @@
 """User Repository module."""
 
-from typing import Sequence, Type
-
-from sqlmodel import select
-
 from ..core.repository import Repository
-from ..exception.entity import EntityNotFoundError
-from ..model.user import User
+from webapp.model.db.user import User
 
 
 class UserRepository(Repository):
