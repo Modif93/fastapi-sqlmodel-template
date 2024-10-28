@@ -1,8 +1,6 @@
-#
-# from pydantic import BaseModel
-# class DatabaseConfig(Base):
-#
-from pydantic import BaseModel
+from typing import Optional
+
+from pydantic import BaseModel, Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -29,8 +27,17 @@ class TokenConfig(BaseModel):
     refresh_hours: int
 
 
+class HashingConfig(BaseModel):
+    time_cost: Optional[int] = Field(default=None)
+    memory_cost: Optional[int] = Field(default=None)
+    parallelism: Optional[int] = Field(default=None)
+    hash_len: Optional[int] = Field(default=None)
+    salt_len: Optional[int] = Field(default=None)
+
+
 class SecurityConfig(BaseModel):
     tokenize: TokenConfig
+    hashing: Optional[HashingConfig] = Field(default=None)
 
 
 class EnvConfig(BaseSettings):
