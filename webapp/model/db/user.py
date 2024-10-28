@@ -16,5 +16,6 @@ class User(SQLModel, table=True):
     disabled: bool = Field(sa_column=Column(String(50), default=False))
     user_level: int = Field(sa_column=Column(String(50), default=5))
     hashed_password: str = Field(sa_column=Column(String(100)))
+    user_uuid: str = Field(sa_column=Column(String(50)))
 
     forum_posts: List['ForumPosts'] = Relationship(back_populates="user")
