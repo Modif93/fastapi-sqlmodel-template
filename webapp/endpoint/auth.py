@@ -2,23 +2,29 @@ from datetime import datetime, timezone
 from typing import Annotated
 
 from fastapi import APIRouter, Depends
+from fastapi.security import OAuth2PasswordRequestFormStrict
+from ..model.schema.token import Token
+from ..service.login import LoginService
 
-from ..model.schema.system import Token
-from ..security.user import UserSecurity, loginForm
+router = APIRouter()
 
-router = APIRouter(tags=['시스템 관리'])
+login_form = Annotated[OAuth2PasswordRequestFormStrict, Depends()]
+login_service = Annotated[LoginService, Depends()]
+# token_header = Annotated[]
 
-userSecurity = Annotated[UserSecurity, Depends(UserSecurity)]
-
-
-@router.post("/auth", summary="로그인")
-async def login_for_access_token(
-        form_data: loginForm,
-        user_security: userSecurity
+@router.post("/token", summary="로그인")
+def generate_token(
+        form_data: login_form,
+        _login_service: login_service,
+        # user_security: userSecurity
 ) -> Token:
     """토큰을 발급합니다."""
-    current_dt = datetime.now(timezone.utc)
-    user = user_security.authenticate_user(form_data.username, form_data.password)
-    access_token = user_security.create_access_token(current_dt, user)
-    refresh_token = user_security.create_refresh_token(current_dt, user)
-    return Token(access_token=access_token, token_type="bearer")
+    return _login_service.generate_token(form_data.username, form_data.password)
+
+@router.get("/token", summary="토큰 재발급")
+def refresh_token(
+        # token_data:
+        _refresh_token: token_header,
+        _login_service: login_service,
+) -> Token:
+    return _login_service.refresh_token(_refresh_token)

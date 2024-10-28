@@ -64,3 +64,5 @@ class Authenticate(object):
         return jwt.encode(
             refresh_token_data, self.tokenize_conf.refresh_secret_key,
             algorithm=self.tokenize_conf.algorithm)
+
+

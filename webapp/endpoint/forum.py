@@ -10,3 +10,5 @@ forum_service = Annotated[ForumService,Depends()]
 def get_all_forum(forum_service:forum_service):
     return forum_service.get_all()
 
+
+
