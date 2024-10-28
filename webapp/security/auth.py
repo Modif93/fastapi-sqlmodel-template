@@ -7,7 +7,7 @@ from fastapi import Depends
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from argon2 import PasswordHasher
 
-from ..core.configuration import env_config
+from ..core.config import env_config
 from ..exception.auth import LoginException
 from ..model.schema.user import UserResponse
 from ..service.user import UserService
