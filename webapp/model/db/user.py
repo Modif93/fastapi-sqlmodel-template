@@ -1,5 +1,10 @@
-from sqlmodel import SQLModel, Field
+from typing import TYPE_CHECKING, Optional, List
+
+from sqlmodel import SQLModel, Field, Relationship
 from sqlalchemy import Column, String
+
+if TYPE_CHECKING:
+    from .forum import ForumPosts
 
 
 class User(SQLModel, table=True):
@@ -11,3 +16,5 @@ class User(SQLModel, table=True):
     disabled: bool = Field(sa_column=Column(String(50), default=False))
     user_level: int = Field(sa_column=Column(String(50), default=5))
     hashed_password: str = Field(sa_column=Column(String(100)))
+
+    forum_posts: List['ForumPosts'] = Relationship(back_populates="user")
