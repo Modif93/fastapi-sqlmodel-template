@@ -13,8 +13,8 @@ class Repository(object):
     _model: Type[SQLModel]
     _entity_name: str
 
-    def __init__(self, session: database_session):
-        self._session = session
+    def __init__(self, _session: database_session):
+        self._session = _session
 
     def get_all(self):
         statement = select(self._model)

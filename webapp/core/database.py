@@ -1,7 +1,9 @@
 import logging
 
 from sqlalchemy import URL
-from sqlmodel import create_engine, SQLModel, Session
+from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy.orm import sessionmaker
+from sqlmodel import create_engine, SQLModel
 
 from webapp.core.configuration import env_config
 
@@ -11,6 +13,8 @@ logger = logging.getLogger(__name__)
 class SessionManager:
     def __init__(self, _connect_url):
         self._engine = create_engine(_connect_url, echo=False)
+        self.SessionMaker = sessionmaker(bind=self._engine)
+
 
     def create_db_and_tables(self):
         SQLModel.metadata.create_all(self._engine)
@@ -29,22 +33,17 @@ class SessionManager:
             database=database,
         )
 
-    def __enter__(self):
-        self._session = Session(self._engine)
-        return self._session
-
-    def __exit__(self, exc_type, exc_value, traceback):
-        if exc_type is not None:
-            logger.exception("Session rollback because of exception")
-            self._session.rollback()
-        # 세션 닫기
-        self._session.close()
-
 
 connect_url = SessionManager.get_db_conn_url(**env_config.datasource.model_dump())
 session_manager = SessionManager(connect_url)
 
 
 def get_session():
-    with session_manager as session:
-        yield session
+    with session_manager.SessionMaker() as session:
+        try:
+            yield session
+        except SQLAlchemyError as err:
+            logger.exception(err)
+            session.rollback()
+        finally:
+            session.close()
