@@ -9,7 +9,7 @@ from argon2 import PasswordHasher
 
 from ..core.configuration import env_config
 from ..exception.auth import LoginException
-from webapp.model.schema.user import UserResponse
+from ..model.schema.user import UserResponse
 from ..service.user import UserService
 
 loginForm = Annotated[OAuth2PasswordRequestForm, Depends()]
