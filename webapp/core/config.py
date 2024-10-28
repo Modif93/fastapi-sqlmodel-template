@@ -6,11 +6,11 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class DataSourceConfig(BaseModel):
     dialect: str
-    driver: str
-    username: str
-    password: str
-    host: str
-    port: int
+    driver: Optional[str] = Field(default=None)
+    username: Optional[str] = Field(default=None)
+    password: Optional[str] = Field(default=None)
+    host: Optional[str] = Field(default=None)
+    port: Optional[int] = Field(default=None)
     database: str
 
 
@@ -22,9 +22,9 @@ class ServerConfig(BaseModel):
 class TokenConfig(BaseModel):
     algorithm: str
     secret_key: str
-    refresh_secret_key: str
     expire_min: int
-    refresh_hours: int
+    issuer: Optional[str] = Field(default=None)
+
 
 
 class HashingConfig(BaseModel):
@@ -36,7 +36,8 @@ class HashingConfig(BaseModel):
 
 
 class SecurityConfig(BaseModel):
-    tokenize: TokenConfig
+    access_token: TokenConfig
+    refresh_token: TokenConfig
     hashing: Optional[HashingConfig] = Field(default=None)
 
 

@@ -5,7 +5,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import sessionmaker
 from sqlmodel import create_engine, SQLModel
 
-from webapp.core.configuration import env_config
+from .config import env_config
 
 logger = logging.getLogger(__name__)
 
