@@ -4,7 +4,7 @@ from datetime import timedelta, datetime, timezone
 import jwt
 
 from ..model.db.user import User
-from ..model.schema.token import AccessToken, RefreshTokenPayload
+from ..model.schema.token import AccessTokenPayload, RefreshTokenPayload
 from ..core.config import env_config, TokenConfig
 
 
@@ -14,7 +14,7 @@ class JWTIssuer(object):
         # self.refresh_token_conf = env_config.security.refresh_token
 
     def create_token(self, current_dt: datetime, user: User):
-        token = AccessToken(
+        token = AccessTokenPayload(
             iss=self._token_conf.issuer,
             sub=user.user_uuid,
             nbf=datetime.now(timezone.utc),
